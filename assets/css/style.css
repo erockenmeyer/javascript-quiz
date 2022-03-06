@@ -1,0 +1,42 @@
+* {
+    font-family: 'Courier New', Courier, monospace;
+    background: #7d7d7d;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+}
+
+ul {
+    list-style: none;
+}
+
+main {
+    text-align: center;
+}
+
+#score-entry {
+    display: none;
+}
+
+#question {
+    font-size: 36px;
+    width: 100%;
+}
+
+#answer {
+    margin: auto;
+}
+
+#check-display {
+    font-size: 24px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 24px;
+    margin: 5px auto;
+    background: #333;
+    color: #fff;
+}
