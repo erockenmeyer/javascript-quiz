@@ -2,6 +2,10 @@ var timerEl = document.getElementById('countdown');
 var questionEl = document.getElementById('question');
 var answerEl = document.getElementById('answer');
 var checkEl = document.getElementById('check-display');
+var formDiv = document.getElementById('score-entry');
+var formEl = document.getElementById('hs-form');
+var submitBtn = document.getElementById('submit-btn');
+var scoreDiv = document.getElementById('high-scores');
 var timeLeft = 15;
 timerEl.textContent = timeLeft;
 var questionCount = 0;
@@ -40,15 +44,20 @@ var highScores = [];
 
 // timer function
 function countdown() {
-    var timer = setInterval(function() {
-        timerEl.textContent = timeLeft;
-        timeLeft--;
-        if (timeLeft < 1) {
-            clearInterval(timer);
-            timerEl.textContent = 0;
-            endGame();
-        }
-    }, 1000)
+    if (!timer) {
+        var timer = setInterval(function() {
+            timerEl.textContent = timeLeft;
+            timeLeft--;
+            if (timeLeft < 1) {
+                clearInterval(timer);
+                timerEl.textContent = 0;
+                endGame();
+            }
+            if (questionCount > questionsArr.length - 1) {
+                clearInterval(timer);
+            }
+        }, 1000)
+    }
 }
 
 // start the game
@@ -93,7 +102,6 @@ function nextQuestion() {
 // check if answer is correct
 function checkAnswer(answer) {
     var currentQ = questionsArr[questionCount];
-    console.log(answer.value);
     // if correct, say correct & call next question
     if (answer.value == currentQ.correct) {
         checkEl.textContent = "Correct!";
@@ -110,22 +118,55 @@ function endGame() {
     answerEl.textContent = "";
     checkEl.textContent = "";
     questionEl.textContent = "Game over! Your score was: " + score;
-    var formEl = document.createElement("input");
-    formEl.setAttribute("type", "text");
-    formEl.setAttribute("id", "name-form");
-    answerEl.appendChild(formEl);
+    formDiv.style.display = "block";
 }
 
 // save scores -- push to array, save to local
-function saveHighScores(score) {
+function saveHighScores() {
+    formDiv.style.display = "none";
     //get name somehow?
     var name = formEl.value;
+    var score = timeLeft;
+
+    if (!name) {
+        alert("Please enter a name first!");
+        return endGame();
+    }
+
+    // saves name & score to an object & pushes to array
     var hsObject = {
         name: name,
         score: score
     }
     highScores.push(hsObject);
-    console.log(highScores);
+
+    // change to string & save to local storage
+    localStorage.setItem("highScores", JSON.stringify(highScores));
+
+    displayHighScores();
+}
+
+// show the high scores
+function displayHighScores() {
+    checkScores();
+    questionEl.textContent = "High Scores";
+    answerEl.textContent = "";
+    var scoreList = document.createElement("ul");
+    answerEl.appendChild(scoreList);
+    for (var i = 0; i < highScores.length; i++) {
+        var currentScore = highScores[i];
+        var currentScoreItem = document.createElement("li");
+        currentScoreItem.textContent = currentScore.name + " ..... " + currentScore.score;
+        scoreList.appendChild(currentScoreItem);
+    }
+
+    timeLeft = 60;
+    questionCount = 0;
+
+    var againBtn = document.createElement("button");
+    againBtn.className = "start-btn";
+    againBtn.textContent = "Play again";
+    answerEl.appendChild(againBtn);
 }
 
 // figures out what was clicked
@@ -143,5 +184,18 @@ var answerButtonHandler = function(event) {
     }
 }
 
+// checks to see if any scores exist in local storage
+function checkScores() {
+    var savedScores = localStorage.getItem("highScores");
+    if (!savedScores) {
+        return false;
+    }
+    highScores = JSON.parse(savedScores);
+}
+
+checkScores();
+
 // event listeners
 answerEl.addEventListener("click", answerButtonHandler);
+submitBtn.addEventListener("click", saveHighScores);
+scoreDiv.addEventListener("click", displayHighScores);
