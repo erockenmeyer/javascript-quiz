@@ -1,5 +1,6 @@
 * {
     font-family: 'Courier New', Courier, monospace;
+    background: #7d7d7d;
 }
 
 header {
@@ -26,9 +27,16 @@ main {
 
 #answer {
     margin: auto;
-    font-size: 30px;
 }
 
 #check-display {
     font-size: 24px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 24px;
+    margin: 5px auto;
+    background: #333;
+    color: #fff;
 }

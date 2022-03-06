@@ -6,7 +6,7 @@ var formDiv = document.getElementById('score-entry');
 var formEl = document.getElementById('hs-form');
 var submitBtn = document.getElementById('submit-btn');
 var scoreDiv = document.getElementById('high-scores');
-var timeLeft = 15;
+var timeLeft = 60;
 timerEl.textContent = timeLeft;
 var questionCount = 0;
 
@@ -53,6 +53,7 @@ function countdown() {
                 timerEl.textContent = 0;
                 endGame();
             }
+            // stop count down if game over
             if (questionCount > questionsArr.length - 1) {
                 clearInterval(timer);
             }
@@ -80,7 +81,7 @@ function nextQuestion() {
         answerEl.textContent = "";
         var answerList = document.createElement("ul");
         answerEl.appendChild(answerList);
-        // show answers as radio buttons
+        // show answers as buttons
         for (var i = 0; i < currentQ.answer.length; i++) {
             var answerListItem = document.createElement("li");
 
@@ -118,6 +119,7 @@ function endGame() {
     answerEl.textContent = "";
     checkEl.textContent = "";
     questionEl.textContent = "Game over! Your score was: " + score;
+    // display the form to get name for score
     formDiv.style.display = "block";
 }
 
@@ -159,7 +161,7 @@ function displayHighScores() {
         currentScoreItem.textContent = currentScore.name + " ..... " + currentScore.score;
         scoreList.appendChild(currentScoreItem);
     }
-
+    // resets defaults for replays
     timeLeft = 60;
     questionCount = 0;
 
